@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>BBB 2013</title>
+		<script type="text/javascript" src="js/jquery-1.8.2.min.js"> </script>
+	    <style>
+			.container {float: left;}
+			.contestant {margin: 3px; padding: 1px; border: 3px solid; border-color: #999999}
+			.selected {border-color: #F39814}
+		</style>
+	</head>
+	<body>
+ 
+ 		<div>Quem deve ser eliminado?</div>
+ 
+ 		<div id="voteSelection">
+	 		<div class="container">
+	 			Participante 1
+	 			<div class="contestant" id="p1"><img src="img/p1.jpg"></div>
+	 		</div>
+	 		<div class="container">
+	 			Participante 2
+	 			<div class="contestant" id="p2"><img src="img/p2.jpg"></div>
+	 		</div>
+	
+			<div style="clear:both;">
+				<form id="frmVote">
+					<!-- 
+					<script type="text/javascript"
+					    src="http://api.recaptcha.net/challenge?k=6Le-BtkSAAAAAAp0dgiMKNy-h7uyKYzCaO67jo2O">
+					</script>
+					<noscript>
+					    <iframe src="http://api.recaptcha.net/noscript?k=<your_public_key>"
+					        height="300" width="500" frameborder="0"></iframe><br>
+					    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
+					    </textarea>
+					    <input type="hidden" name="recaptcha_response_field" 
+					        value="manual_challenge">
+					</noscript>
+					 -->
+					<input type="button" value="Enviar seu voto agora" id="btnVote" />
+				</form>
+			</div> 
+		</div>
+		
+		<script>
+			$.ajaxSetup ({
+				cache: false
+			});
+			
+			var volte = -1;
+			
+			$("#p1").click(function(){ select(1);});
+			$("#p2").click(function(){ select(2);});
+			
+			$("#btnVote").click(function(){ vote();});
+			
+			function select(v)
+			{
+				volte = v;
+				if (v == 1)
+				{
+					$("#p1").addClass("selected");
+					$("#p2").removeClass("selected");
+				}
+				else
+				{
+					$("#p2").addClass("selected");
+					$("#p1").removeClass("selected");
+				}
+			}
+			
+			function vote()
+			{
+				//Verifica que algum candidato foi escolhido.
+				if (volte == -1)
+				{
+					alert("É necessário escolher um dos participantes antes de enviar seu voto.");	
+				}
+				else
+				{
+					contestant = volte;
+					
+					$.get("vote", {v: contestant, rrf: $("#recaptcha_response_field").val(), rcf: $("#recaptcha_challenge_field").val()},
+						  function(resp)
+						  {
+							  showResult(resp);
+						  }, "text");
+				}
+			}
+			
+			function showResult(resp)
+			{
+				if (resp == "ErroInterno")
+				{
+					alert("Estamos enfrentando problemas em nossos servidores. Por favor, tente mais tarde.");
+					Recaptcha.reload();
+					return;
+				}
+				else if (resp == "ErroCaptcha")
+				{
+					alert("O texto digitado correspondente a imagem não conferem. Tente novamente.");
+					Recaptcha.reload();
+					return;
+				}
+				
+				$.get("#volteSelection").display = 'none';
+				$("#result").show();
+								
+				p1 = parseInt(resp*100).toFixed(0);
+				p2 = (100-p1).toFixed(0);
+				
+				alert("Resultado até o momento:\nParticipante 1: " + p1 + "%\nParticipante 2: " + p2 + "%");
+			}
+		</script>
+	</body>
+</html>

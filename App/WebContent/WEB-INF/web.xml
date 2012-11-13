@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    
+	    <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+	        resourceName="UserDatabase"/>
+    
+    <security-constraint>
+    	<web-resource-collection>
+            <web-resource-name>Top Secret Stuff</web-resource-name>
+            <url-pattern>/resultado.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>bial</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Top Secret Stuff</realm-name>
+    </login-config>
+    <security-role>
+        <description>Roles that each qualify a user to authenticate.
+        </description>
+        <role-name>bial</role-name>
+    </security-role>
+    
+</web-app>

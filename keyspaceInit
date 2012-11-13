@@ -1,0 +1,7 @@
+drop keyspace bbb;
+create keyspace bbb;
+use bbb;
+create column family voltes with default_validation_class=CounterColumnType and replicate_on_write=true and comparator=UTF8Type;
+create column family voltes_1 with default_validation_class=CounterColumnType and replicate_on_write=true and comparator=UTF8Type;
+create column family voltes_2 with default_validation_class=CounterColumnType and replicate_on_write=true and comparator=UTF8Type;
+

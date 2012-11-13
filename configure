@@ -1,0 +1,21 @@
+#!/bin/sh
+#Configura o sistema
+
+echo Criando a estrutura para armazenamento de dados do Cassandra
+sudo mkdir -p /var/log/cassandra
+sudo chown -R `whoami` /var/log/cassandra
+sudo mkdir -p /var/lib/cassandra
+sudo chown -R `whoami` /var/lib/cassandra
+sudo chmod 755 startCassandra.sh
+
+#Cria o keyspace para a aplicação
+
+bash startCassandra.sh
+
+sleep 20s #Aguarda o cassandra subir
+
+apache-cassandra-1.1.6/bin/cassandra-cli < keyspaceInit
+
+kill -9 `cat pid.txt`
+
+
